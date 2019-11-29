@@ -11,7 +11,7 @@ class UsersController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['show']]);
     }
 
     public function show(User $user)
@@ -21,11 +21,23 @@ class UsersController extends Controller
 
     public function edit(User $user)
     {
+        try {
+            $this->authorize('update', $user);
+        } catch (AuthorizationException $e) {
+            return abort(403, '无权访问');
+        }
+
         return view('users.edit', compact('user'));
     }
 
     public function update(UserRequest $request, User $user, ImageUploadHandler $uploader)
     {
+        try {
+            $this->authorize('update', $user);
+        } catch (AuthorizationException $e) {
+            return abort(403, '无权访问');
+        }
+
         $data = $request->all();
 
         if ($request->avatar) {
