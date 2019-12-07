@@ -19,7 +19,7 @@
 <body>
   <div id="app" class="{{ route_class() }}-page">
 
-    @include('layouts._header')
+    @include('layouts._header', ['categories' => app(App\Models\Category::class)->categories()])
 
     <div class="container">
 
